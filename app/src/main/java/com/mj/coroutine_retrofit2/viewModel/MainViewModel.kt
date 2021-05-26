@@ -9,6 +9,9 @@ import kotlinx.coroutines.*
 
 class MainViewModel : ViewModel() {
 
+    /**
+     * https://thdev.tech/kotlin/2021/01/12/Retrofit-Coroutines/
+     */
     var userData: MutableLiveData<UserResponse> = MutableLiveData()
 
     private val coroutineExceptionHanlder =
@@ -29,7 +32,7 @@ class MainViewModel : ViewModel() {
 
         var tmpData: UserResponse? = null
 
-        viewModelScope.launch(ioDispatchers) {
+        viewModelScope.launch(uiDispatchers) {
 
             try {
                 RetrofitObject.getApiService().getUserData().apply {
@@ -38,9 +41,7 @@ class MainViewModel : ViewModel() {
                         tmpData = this
                     }
 
-                    withContext(uiDispatchers) {
                         userData.value = tmpData
-                    }
                 }
             } catch (e: Exception) {
 
